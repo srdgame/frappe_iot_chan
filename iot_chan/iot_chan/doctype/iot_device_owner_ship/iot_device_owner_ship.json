@@ -1,0 +1,71 @@
+{
+ "autoname": "field:device",
+ "creation": "2020-08-12 16:43:28.660110",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "device",
+  "child_node",
+  "comments"
+ ],
+ "fields": [
+  {
+   "fieldname": "device",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Device",
+   "options": "IOT Device",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "child_node",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Child Node",
+   "options": "IOT Chan Child Node",
+   "reqd": 1
+  },
+  {
+   "fieldname": "comments",
+   "fieldtype": "Data",
+   "label": "Comments"
+  }
+ ],
+ "modified": "2020-08-12 16:43:28.660110",
+ "modified_by": "Administrator",
+ "module": "IOT Chan",
+ "name": "IOT Device Owner Ship",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "IOT Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

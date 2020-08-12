@@ -60,6 +60,7 @@ def import_basic_info(info):
 	developers = info['App Developer']
 	apps = info['IOT Application']
 	users = info['User']
+	devices = info['IOT Device']
 
 	frappe.logger(__name__).info('Import upper IOT Center basic information')
 
@@ -87,9 +88,15 @@ def import_basic_info(info):
 
 	for user in users:
 		if frappe.get_value('User', user, 'name') is None:
-			frappe.logger(__name__).info('Import upper IOT Center user')
-			new_user = frappe.get_doc(dict(doctype='User', email=user, first_name='Import User')).insert()
+			frappe.logger(__name__).info('Import upper IOT Center user: {0}'.format(user))
+			new_user = frappe.get_doc(dict(doctype='User', email=user, first_name='Imported User')).insert()
 			new_user.save()
+
+	for dev in devices:
+		if frappe.get_value('IOT Device', dev, 'name') is None:
+			frappe.logger(__name__).info('Import upper IOT Center device: {0}'.format(dev))
+			new_dev = frappe.get_doc(dict(doctype='IOT Device', sn=dev, dev_name='Imported Device')).insert()
+			new_dev.save()
 
 	import_file('App Category', app_cate_path, import_type='Update', submit_after_import=True, console=False)
 	import_file('IOT Hardware Architecture', iot_hw_arch_path, import_type='Update', submit_after_import=True, console=False)

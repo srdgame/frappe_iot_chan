@@ -19,6 +19,12 @@ def get_data():
 					"name": "IOT Chan Child Node",
 					"onboard": 1,
 					"description": _("IOT Chan Child Node"),
+				},
+				{
+					"type": "doctype",
+					"name": "IOT Device Owner Ship",
+					"onboard": 1,
+					"description": _("IOT Device Owner Ship"),
 				}
 			]
 		}

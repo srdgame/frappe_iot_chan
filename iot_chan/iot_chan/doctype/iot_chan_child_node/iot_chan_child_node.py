@@ -58,6 +58,10 @@ def export_developers(node_name):
 	return export_doctyp_to_csv('App Developer', filters={"name": ["in", developers]})
 
 
+def list_devices(node_name):
+	return [d.device for d in frappe.get_all("IOT Device Owner Ship", filters={"child_node": node_name}, fields=['device'])]
+
+
 def export_app_versions(node_name, app, beta=0):
 	app_id = frappe.get_value("IOT Chan Child NodeLicensedApp", {"parent": node_name}, "app")
 	if app_id != app:

@@ -19,24 +19,24 @@ class IOTChanSettings(Document):
 
 	@staticmethod
 	def get_enable_upper_center():
-		return frappe.db.get_single_value("App Center Settings", "enable_upper_center")
+		return frappe.db.get_single_value("IOT Chan Settings", "enable_upper_center")
 
 	@staticmethod
 	def get_upper_center():
-		return frappe.db.get_single_value("App Center Settings", "upper_center")
+		return frappe.db.get_single_value("IOT Chan Settings", "upper_center")
 
 	@staticmethod
 	def get_auth_code():
-		return frappe.db.get_single_value("App Center Settings", "auth_code")
+		return frappe.db.get_single_value("IOT Chan Settings", "auth_code")
 
 	@staticmethod
 	def get_on_behalf_developer():
-		return frappe.db.get_single_value("App Center Settings", "on_behalf_developer")
+		return frappe.db.get_single_value("IOT Chan Settings", "on_behalf_developer")
 
 	@staticmethod
 	def get_last_sync_time():
-		return frappe.db.get_single_value("App Center Settings", "last_sync_time")
+		return frappe.db.get_single_value("IOT Chan Settings", "last_sync_time")
 
 	@staticmethod
 	def update_last_sync_time(self):
-		frappe.set_value("App Center Settings", "App Center Settings", "last_sync_time", frappe.utils.now())
+		frappe.set_value("IOT Chan Settings", "IOT Chan Settings", "last_sync_time", frappe.utils.now())

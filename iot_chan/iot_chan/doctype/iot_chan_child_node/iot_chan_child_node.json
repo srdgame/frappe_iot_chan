@@ -1,0 +1,88 @@
+{
+ "autoname": "field:node_name",
+ "creation": "2020-08-10 19:14:41.678174",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "node_name",
+  "auth_code",
+  "beta_version_enabled",
+  "sb1",
+  "licensed_applications"
+ ],
+ "fields": [
+  {
+   "fieldname": "node_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Node Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "auth_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Auth Code",
+   "reqd": 1,
+   "set_only_once": 1,
+   "unique": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "beta_version_enabled",
+   "fieldtype": "Check",
+   "label": "Beta Version Enabled",
+   "options": "0"
+  },
+  {
+   "fieldname": "sb1",
+   "fieldtype": "Section Break",
+   "label": "Licensed Applications"
+  },
+  {
+   "fieldname": "licensed_applications",
+   "fieldtype": "Table",
+   "label": "Licensed Applications",
+   "options": "App Center Child NodeLicensedApp"
+  }
+ ],
+ "modified": "2020-08-10 19:31:17.910377",
+ "modified_by": "Administrator",
+ "module": "IOT Chan",
+ "name": "IOT Chan Child Node",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "IOT Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

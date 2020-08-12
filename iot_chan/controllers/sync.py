@@ -157,7 +157,7 @@ def import_app_versions(versions):
 			beta=ver.beta,
 			comment=ver.comment
 		)
-		new_dev = frappe.get_doc(data).insert()
-		new_dev.save()
+		new_version = frappe.get_doc(data).insert()
+		new_version.save()
 
 	frappe.db.commit()

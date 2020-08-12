@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 import frappe
 from frappe import throw, _
 from frappe.model.document import Document
+from iot_chan.controllers.sync import sync_all as _sync_all
 
 
 class IOTChanSettings(Document):
@@ -22,6 +23,8 @@ class IOTChanSettings(Document):
 			throw(_("Upper IOT Center is not enabled!"))
 		if 'IOT Manager' not in frappe.get_roles():
 			raise frappe.PermissionError
+
+		_sync_all()
 
 		self.update_last_sync_time()
 

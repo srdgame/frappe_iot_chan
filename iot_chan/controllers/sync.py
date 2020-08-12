@@ -25,11 +25,11 @@ def get_iot_chan_file_path(app):
 	return file_dir
 
 
-def sync_basic_info():
-	frappe.enqueue('iot_chan.controllers.sync._sync_basic_info')
+def sync_all():
+	frappe.enqueue('iot_chan.controllers.sync._sync_all')
 
 
-def _sync_basic_info():
+def _sync_all():
 	if IOTChanSettings.get_enable_upper_center() != 1:
 		frappe.logger(__name__).error("IOT Upper Center is not enabled")
 		return

@@ -10,6 +10,7 @@ app_icon = "octicon octicon-server"
 app_color = "green"
 app_email = "dirk@kooiot.com"
 app_license = "MIT"
+source_link = "https://github.com/srdgame/frappe_iot_chan"
 
 # Includes in <head>
 # ------------------

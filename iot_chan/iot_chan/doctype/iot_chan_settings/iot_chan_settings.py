@@ -7,6 +7,7 @@ import frappe
 from frappe import throw, _
 from frappe.model.document import Document
 
+
 class IOTChanSettings(Document):
 	def validate(self):
 		if self.enable_upper_center == 1:

@@ -1,6 +1,7 @@
 {
  "creation": "2020-08-12 12:59:31.849716",
  "doctype": "DocType",
+ "document_type": "Setup",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -50,6 +51,7 @@
    "read_only": 1
   }
  ],
+ "issingle": 1,
  "modified": "2020-08-12 12:59:31.849716",
  "modified_by": "Administrator",
  "module": "IOT Chan",

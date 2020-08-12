@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include iot_chan *.css
+recursive-include iot_chan *.csv
+recursive-include iot_chan *.html
+recursive-include iot_chan *.ico
+recursive-include iot_chan *.js
+recursive-include iot_chan *.json
+recursive-include iot_chan *.md
+recursive-include iot_chan *.png
+recursive-include iot_chan *.py
+recursive-include iot_chan *.svg
+recursive-include iot_chan *.txt
+recursive-exclude iot_chan *.pyc

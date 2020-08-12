@@ -42,6 +42,7 @@ def list_developers(node_name):
 	for d in frappe.get_all("IOT Chan Child NodeLicensedApp", fields=["app"], filters=filters):
 		developer = frappe.get_value("IOT Application", d.app, "developer")
 		developers.add(developer)
+	return developers
 
 
 def list_developer_users(node_name):
@@ -62,14 +63,49 @@ def list_devices(node_name):
 	return [d.device for d in frappe.get_all("IOT Device Owner Ship", filters={"child_node": node_name}, fields=['device'])]
 
 
-def export_app_versions(node_name, app, beta=0):
+def list_app_versions(node_name, app, beta=0, base_version=0):
 	app_id = frappe.get_value("IOT Chan Child NodeLicensedApp", {"parent": node_name}, "app")
 	if app_id != app:
 		raise frappe.PermissionError
 
 	filters = {
 		"app": app,
-		"beta": beta
+		"version": [">", base_version]
 	}
 
-	return export_doctyp_to_csv('IOT Application Version', filters=filters)
+	fields = ['app', 'version', 'beta', 'comment']
+	order_by = "modified desc"
+	versions = frappe.get_all("IOT Application Version", filters=filters, fields=fields, order_by=order_by)
+	if len(versions) == 0:
+		return []
+
+	beta_comment = 'Comments:'
+	beta_version = versions[0].version
+	comment = 'Comments:'
+	version = 0
+	got_release = False
+	for ver in versions:
+		beta_comment = '\n' + ver.comment
+		if version == 0 and ver.beta == 0:
+			version = ver.version
+			got_release = True
+		if got_release:
+			comment = comment + '\n' + ver.comment
+
+	data = []
+	if beta == 1:
+		data.append({
+			"app": app,
+			"version": beta_version,
+			"beta": 1,
+			"comment": beta_comment
+		})
+	if version != 0:
+		data.append({
+			"app": app,
+			"version": version,
+			"beta": 0,
+			"comment": comment
+		})
+
+	return data

@@ -48,10 +48,10 @@ def get_basic_info():
 
 
 @frappe.whitelist(allow_guest=True)
-def get_app_versions(app):
+def get_app_versions(app, base_version=0):
 	node = valid_sync_auth_code()
 
-	from iot_chan.iot_chan.doctype.iot_chan_child_node.iot_chan_child_node import export_app_versions
+	from iot_chan.iot_chan.doctype.iot_chan_child_node.iot_chan_child_node import list_app_versions
 
-	return export_app_versions(node.name, app, node.beta_version_enabled)
+	return list_app_versions(node.name, app, node.beta_version_enabled, base_version)
 

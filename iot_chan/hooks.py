@@ -87,6 +87,26 @@ source_link = "https://github.com/srdgame/frappe_iot_chan"
 # 		"on_trash": "method"
 #	}
 # }
+doc_events = {
+	"IOT Device": {
+		"validate": "iot_chan.controllers.hooks.validate_iot_device"
+	},
+	"App Category": {
+		"validate": "iot_chan.controllers.hooks.validate_app_category"
+	},
+	"IOT Hardware Architecture": {
+		"validate": "iot_chan.controllers.hooks.validate_iot_hardware_architecture"
+	},
+	"App Developer": {
+		"validate": "iot_chan.controllers.hooks.validate_app_developer"
+	},
+	"IOT Application": {
+		"validate": "iot_chan.controllers.hooks.validate_iot_application"
+	},
+	"IOT Application Version": {
+		"validate": "iot_chan.controllers.hooks.validate_iot_application_version"
+	}
+}
 
 # Scheduled Tasks
 # ---------------

@@ -127,17 +127,15 @@ def import_basic_info(info):
 		raise ex
 
 	frappe.flags.in_import = False
-	frappe.db.commit()
 
 	import_file('App Category', app_cate_path, import_type='Update', submit_after_import=True, console=False)
 	import_file('IOT Hardware Architecture', iot_hw_arch_path, import_type='Update', submit_after_import=True, console=False)
 	import_file('App Developer', developers_path, import_type='Update', submit_after_import=True, console=False)
 	import_file('IOT Application', apps_path, import_type='Update', submit_after_import=True, console=False)
 
-	frappe.db.commit()
-
 	# Trigger all application sync
 	for d in frappe.get_all("IOT Application", ["name"]):
+		frappe.logger(__name__).info('Import IOT Application: {0} creating'.format(d.name))
 		sync_app_versions(d.name)
 
 	frappe.db.commit()

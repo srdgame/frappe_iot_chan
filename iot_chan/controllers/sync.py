@@ -91,16 +91,17 @@ def import_basic_info(info):
 	frappe.logger(__name__).info('IOT Application file path: {0}'.format(apps_path))
 
 	with open(app_cate_path, "w") as outfile:
-		outfile.write(frappe.as_json(app_cat))
+		# outfile.write(frappe.as_json(app_cat))
+		outfile.write(app_cat)
 
 	with open(iot_hw_arch_path, "w") as outfile:
-		outfile.write(frappe.as_json(iot_hw_arch))
+		outfile.write(iot_hw_arch)
 
 	with open(developers_path, "w") as outfile:
-		outfile.write(frappe.as_json(developers))
+		outfile.write(developers)
 
 	with open(apps_path, "w") as outfile:
-		outfile.write(frappe.as_json(apps))
+		outfile.write(apps)
 
 	for user in users:
 		if frappe.get_value('User', user, 'name') is None:

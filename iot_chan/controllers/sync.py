@@ -34,8 +34,8 @@ def _sync_all():
 		frappe.logger(__name__).error("IOT Upper Center is not enabled")
 		return
 
-	iot_center = IOTChanSettings.get_iot_center()
-	auth_code = IOTChanSettings.get_iot_center_auth_code()
+	iot_center = IOTChanSettings.get_enable_upper_center()
+	auth_code = IOTChanSettings.get_auth_code()
 
 	try:
 		session = requests.session()
@@ -124,8 +124,8 @@ def _sync_app_versions(app):
 		frappe.logger(__name__).error("IOT Upper Center is not enabled")
 		return
 
-	iot_center = IOTChanSettings.get_iot_center()
-	auth_code = IOTChanSettings.get_iot_center_auth_code()
+	iot_center = IOTChanSettings.get_enable_upper_center()
+	auth_code = IOTChanSettings.get_auth_code()
 
 	base_version = get_latest_version(app, 0)
 

@@ -103,6 +103,14 @@ def import_basic_info(info):
 	with open(apps_path, "w") as outfile:
 		outfile.write(apps)
 
+	users_path = os.path.join(importer_dir, 'users__' + now_stamp + '.csv')
+	with open(users_path, "w") as outfile:
+		outfile.write(frappe.as_json(users))
+
+	devices_path = os.path.join(importer_dir, 'devices__' + now_stamp + '.csv')
+	with open(devices_path, "w") as outfile:
+		outfile.write(frappe.as_json(devices))
+
 	for user in users:
 		if frappe.get_value('User', user, 'name') is None:
 			frappe.logger(__name__).info('Import upper IOT Center user: {0}'.format(user))

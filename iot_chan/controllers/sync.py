@@ -128,6 +128,10 @@ def import_basic_info(info):
 	for d in frappe.get_all("IOT Application", ["name"]):
 		sync_app_versions(d.name)
 
+	frappe.db.commit()
+
+	frappe.logger(__name__).info('Import upper IOT Center is done!!')
+
 	return True
 
 

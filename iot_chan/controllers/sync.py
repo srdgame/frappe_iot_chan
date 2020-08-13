@@ -22,7 +22,7 @@ def get_iot_chan_file_path(app):
 	if not os.path.exists(file_dir):
 		os.makedirs(file_dir)
 
-	return file_dir
+	return os.path.abspath(file_dir)
 
 
 def sync_api(method, params=None):

@@ -17,7 +17,8 @@ from iot_chan.data_import import import_file
 
 
 def get_iot_chan_file_path(app):
-	basedir = get_files_path('iot_chan_files', is_private=1)
+	#basedir = get_files_path('iot_chan_files', is_private=1)
+	basedir="/tmp" ## the importer parsing filename and extension has bug
 	file_dir = os.path.join(basedir, app)
 	if not os.path.exists(file_dir):
 		os.makedirs(file_dir)

@@ -28,7 +28,7 @@ def get_iot_chan_file_path(app):
 def sync_api(method, params=None):
 	iot_center = IOTChanSettings.get_upper_center()
 	auth_code = IOTChanSettings.get_auth_code()
-	url = iot_center + "/api/method/iot_chan.sync_api." + method
+	url = iot_center + "/api/method/iot_chan.api." + method
 
 	session = requests.session()
 	session.headers['AuthorizationCode'] = auth_code

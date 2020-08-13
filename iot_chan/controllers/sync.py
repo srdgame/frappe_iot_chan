@@ -83,6 +83,8 @@ def import_basic_info(info):
 	developers_path = os.path.join(importer_dir, 'developers.' + now_stamp + '.csv')
 	apps_path = os.path.join(importer_dir, 'apps.' + now_stamp + '.csv')
 
+	frappe.logger(__name__).info('App Category {0}'.format(app_cat))
+
 	with open(app_cate_path, "w") as outfile:
 		outfile.write(frappe.as_json(app_cat))
 
@@ -98,7 +100,7 @@ def import_basic_info(info):
 	for user in users:
 		if frappe.get_value('User', user, 'name') is None:
 			frappe.logger(__name__).info('Import upper IOT Center user: {0}'.format(user))
-			new_user = frappe.get_doc(dict(doctype='User', email=user, first_name='Imported User')).insert()
+			new_user = frappe.get_doc(dict(doctype='User', email=user, first_name='Imported User', send_welcome_email=0, enabled=0)).insert()
 			new_user.save()
 
 	for dev in devices:

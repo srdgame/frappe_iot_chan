@@ -29,6 +29,8 @@ class ChanImporter(Importer):
 		warnings = self.import_file.get_warnings()
 		warnings = [w for w in warnings if w.get("type") != "info"]
 
+		frappe.logger(__name__).info('Import process_doc 1111111')
+
 		if warnings:
 			if self.console:
 				self.print_grouped_warnings(warnings)
@@ -167,5 +169,4 @@ def import_file(
 		doctype=doctype, file_path=file_path, data_import=data_import, console=console
 	)
 	import_log = i.import_data()
-	data_import.save()
 	frappe.logger(__name__).info('Import result: {0}'.format(import_log))

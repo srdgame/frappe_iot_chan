@@ -19,7 +19,7 @@ def export_doctype_to_csv(doctype, filters=None):
 	org_type = frappe.response.type
 	org_doctype = frappe.response.doctype
 
-	export_data(doctype=doctype, all_doctypes=True, template=True, with_data=True, filters=filters)
+	export_data(doctype=doctype, all_doctypes=True, template=False, with_data=True, filters=filters)
 	data = frappe.response.result
 
 	# Rollback response

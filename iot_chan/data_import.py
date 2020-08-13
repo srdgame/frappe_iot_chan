@@ -169,4 +169,4 @@ def import_file(
 		doctype=doctype, file_path=file_path, data_import=data_import, console=console
 	)
 	import_log = i.import_data()
-	frappe.logger(__name__).info('Import result: {0}'.format(import_log))
+	frappe.logger(__name__).info('Import type: {0} result: {1}'.format(data_import.import_type, import_log))

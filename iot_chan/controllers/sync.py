@@ -105,22 +105,28 @@ def import_basic_info(info):
 	with open(devices_path, "w") as outfile:
 		outfile.write(frappe.as_json(devices))
 
-	for user in users:
-		if frappe.get_value('User', user, 'name') is None:
-			frappe.logger(__name__).info('Import upper IOT Center user: {0} creating'.format(user))
-			new_user = frappe.get_doc(dict(doctype='User', email=user, first_name='Imported User', send_welcome_email=0, enabled=0)).insert()
-			new_user.save()
-		else:
-			frappe.logger(__name__).info('Import upper IOT Center user: {0} exists'.format(user))
+	try:
+		frappe.flags.in_import = True
+		for user in users:
+			if frappe.get_value('User', user, 'name') is None:
+				frappe.logger(__name__).info('Import upper IOT Center user: {0} creating'.format(user))
+				new_user = frappe.get_doc(dict(doctype='User', email=user, first_name='Imported User', send_welcome_email=0, enabled=0)).insert()
+				new_user.save()
+			else:
+				frappe.logger(__name__).info('Import upper IOT Center user: {0} exists'.format(user))
 
-	for dev in devices:
-		if frappe.get_value('IOT Device', dev, 'name') is None:
-			frappe.logger(__name__).info('Import upper IOT Center device: {0} creating'.format(dev))
-			new_dev = frappe.get_doc(dict(doctype='IOT Device', sn=dev, dev_name='Imported Device')).insert()
-			new_dev.save()
-		else:
-			frappe.logger(__name__).info('Import upper IOT Center device: {0} exists'.format(dev))
+		for dev in devices:
+			if frappe.get_value('IOT Device', dev, 'name') is None:
+				frappe.logger(__name__).info('Import upper IOT Center device: {0} creating'.format(dev))
+				new_dev = frappe.get_doc(dict(doctype='IOT Device', sn=dev, dev_name='Imported Device')).insert()
+				new_dev.save()
+			else:
+				frappe.logger(__name__).info('Import upper IOT Center device: {0} exists'.format(dev))
+	except Exception as ex:
+		frappe.flags.in_import = False
+		raise ex
 
+	frappe.flags.in_import = False
 	frappe.db.commit()
 
 	import_file('App Category', app_cate_path, import_type='Update', submit_after_import=True, console=False)
@@ -154,8 +160,11 @@ def _sync_app_versions(app):
 
 	try:
 		json_data = sync_api("get_app_versions", params={"app": app, "base_version": base_version})
+		frappe.flags.in_import = True
 		import_app_versions(json_data)
+		frappe.flags.in_import = False
 	except Exception as ex:
+		frappe.flags.in_import = False
 		frappe.logger(__name__).error(ex)
 		throw(repr(ex))
 

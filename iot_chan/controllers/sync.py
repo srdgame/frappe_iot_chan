@@ -35,7 +35,7 @@ def sync_api(method, params=None):
 	session.headers['Content-Type'] = 'application/json'
 	session.headers['Accept'] = 'application/json'
 
-	r = requests.session().get(url, params=params, timeout=10)
+	r = session.get(url, params=params, timeout=10)
 	if r.status_code != 200:
 		frappe.logger(__name__).error(r.text)
 		throw(_("Failed to request: {0}\n text: {1}").format(method, r.text))

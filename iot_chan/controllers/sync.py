@@ -118,7 +118,7 @@ def import_basic_info(info):
 		for dev in devices:
 			if frappe.get_value('IOT Device', dev, 'name') is None:
 				frappe.logger(__name__).info('Import upper IOT Center device: {0} creating'.format(dev))
-				new_dev = frappe.get_doc(dict(doctype='IOT Device', sn=dev, dev_name='Imported Device')).insert()
+				new_dev = frappe.get_doc(dict(doctype='IOT Device', sn=dev, dev_name='Imported Device', enabled=1)).insert()
 				new_dev.save()
 			else:
 				frappe.logger(__name__).info('Import upper IOT Center device: {0} exists'.format(dev))

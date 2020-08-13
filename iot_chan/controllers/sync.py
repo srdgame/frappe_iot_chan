@@ -77,7 +77,7 @@ def import_basic_info(info):
 	importer_dir = get_iot_chan_file_path('____importer')
 	frappe.utils.now()
 
-	now_stamp = time.time()
+	now_stamp = str(time.time())
 	app_cate_path = os.path.join(importer_dir, 'app_cate.' + now_stamp + '.csv')
 	iot_hw_arch_path = os.path.join(importer_dir, 'iot_hw_arch.' + now_stamp + '.csv')
 	developers_path = os.path.join(importer_dir, 'developers.' + now_stamp + '.csv')

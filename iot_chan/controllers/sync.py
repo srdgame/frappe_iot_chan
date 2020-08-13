@@ -83,27 +83,27 @@ def import_basic_info(info):
 	app_cate_path = os.path.join(importer_dir, 'app_cate__' + now_stamp + '.csv')
 	with open(app_cate_path, "w") as outfile:
 		# outfile.write(frappe.as_json(app_cat))
-		outfile.write(app_cat)
+		outfile.write(app_cat.encode("utf-8"))
 
 	iot_hw_arch_path = os.path.join(importer_dir, 'iot_hw_arch__' + now_stamp + '.csv')
 	with open(iot_hw_arch_path, "w") as outfile:
-		outfile.write(iot_hw_arch)
+		outfile.write(iot_hw_arch.encode("utf-8"))
 
 	developers_path = os.path.join(importer_dir, 'developers__' + now_stamp + '.csv')
 	with open(developers_path, "w") as outfile:
-		outfile.write(developers)
+		outfile.write(developers.encode("utf-8"))
 
 	apps_path = os.path.join(importer_dir, 'apps__' + now_stamp + '.csv')
 	with open(apps_path, "w") as outfile:
-		outfile.write(apps)
+		outfile.write(apps.encode("utf-8"))
 
 	users_path = os.path.join(importer_dir, 'users__' + now_stamp + '.csv')
 	with open(users_path, "w") as outfile:
-		outfile.write(frappe.as_json(users))
+		outfile.write(frappe.as_json(users).encode("utf-8"))
 
 	devices_path = os.path.join(importer_dir, 'devices__' + now_stamp + '.csv')
 	with open(devices_path, "w") as outfile:
-		outfile.write(frappe.as_json(devices))
+		outfile.write(frappe.as_json(devices).encode("utf-8"))
 
 	try:
 		frappe.flags.in_import = True

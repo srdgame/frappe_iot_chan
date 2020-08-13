@@ -29,15 +29,15 @@ def valid_sync_auth_code(auth_code=None):
 def get_basic_info():
 	node = valid_sync_auth_code()
 
-	from iot_chan.iot_chan.doctype.iot_chan_child_node.iot_chan_child_node import export_doctyp_to_csv
+	from iot_chan.iot_chan.doctype.iot_chan_child_node.iot_chan_child_node import export_doctype_to_csv
 	from iot_chan.iot_chan.doctype.iot_chan_child_node.iot_chan_child_node import export_apps
 	from iot_chan.iot_chan.doctype.iot_chan_child_node.iot_chan_child_node import export_developers
 	from iot_chan.iot_chan.doctype.iot_chan_child_node.iot_chan_child_node import list_developer_users
 	from iot_chan.iot_chan.doctype.iot_chan_child_node.iot_chan_child_node import list_devices
 
 	info = {
-		'App Category': export_doctyp_to_csv('App Category'),
-		'IOT Hardware Architecture': export_doctyp_to_csv('IOT Hardware Architecture'),
+		'App Category': export_doctype_to_csv('App Category'),
+		'IOT Hardware Architecture': export_doctype_to_csv('IOT Hardware Architecture'),
 		'IOT Application': export_apps(node.name),
 		'App Developer': export_developers(node.name),
 		'User': list_developer_users(node.name),  # only user id

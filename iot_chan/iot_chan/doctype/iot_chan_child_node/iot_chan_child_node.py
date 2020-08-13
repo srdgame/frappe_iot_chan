@@ -13,7 +13,7 @@ class IOTChanChildNode(Document):
 	pass
 
 
-def export_doctyp_to_csv(doctype, filters=None):
+def export_doctype_to_csv(doctype, filters=None):
 	# Keep the response
 	org_result = frappe.response.result
 	org_type = frappe.response.type
@@ -33,7 +33,7 @@ def export_apps(node_name):
 	filters = {"parent": node_name}
 	apps = [d.app for d in frappe.get_all("IOT Chan Child NodeLicensedApp", fields=["app"], filters=filters)]
 
-	return export_doctyp_to_csv('IOT Application', filters={"name": ["in", apps]})
+	return export_doctype_to_csv('IOT Application', filters={"name": ["in", apps]})
 
 
 def list_developers(node_name):
@@ -56,7 +56,7 @@ def list_developer_users(node_name):
 
 def export_developers(node_name):
 	developers = list_developers(node_name)
-	return export_doctyp_to_csv('App Developer', filters={"name": ["in", developers]})
+	return export_doctype_to_csv('App Developer', filters={"name": ["in", developers]})
 
 
 def list_devices(node_name):

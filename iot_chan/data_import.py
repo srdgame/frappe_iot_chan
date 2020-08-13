@@ -38,4 +38,5 @@ def import_file(
 	i = ChanImporter(
 		doctype=doctype, file_path=file_path, data_import=data_import, console=console
 	)
-	i.import_data()
+	import_log = i.import_data()
+	frappe.logger(__name__).info('Import result{0}'.format(import_log))

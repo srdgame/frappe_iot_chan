@@ -78,11 +78,10 @@ def import_basic_info(info):
 	frappe.utils.now()
 
 	now_stamp = time.time()
-	ts = datetime.datetime.utcfromtimestamp(now_stamp)
-	app_cate_path = os.path.join(importer_dir, 'app_cate.' + ts + '.csv')
-	iot_hw_arch_path = os.path.join(importer_dir, 'iot_hw_arch.' + ts + '.csv')
-	developers_path = os.path.join(importer_dir, 'developers.' + ts + '.csv')
-	apps_path = os.path.join(importer_dir, 'apps.' + ts + '.csv')
+	app_cate_path = os.path.join(importer_dir, 'app_cate.' + now_stamp + '.csv')
+	iot_hw_arch_path = os.path.join(importer_dir, 'iot_hw_arch.' + now_stamp + '.csv')
+	developers_path = os.path.join(importer_dir, 'developers.' + now_stamp + '.csv')
+	apps_path = os.path.join(importer_dir, 'apps.' + now_stamp + '.csv')
 
 	with open(app_cate_path, "w") as outfile:
 		outfile.write(frappe.as_json(app_cat))

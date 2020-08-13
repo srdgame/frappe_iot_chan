@@ -81,10 +81,10 @@ def import_basic_info(info):
 
 	frappe.logger(__name__).info('Import upper IOT Center timestamp: {0}'.format(now_stamp))
 
-	app_cate_path = os.path.join(importer_dir, 'app_cate.' + now_stamp + '.csv')
-	iot_hw_arch_path = os.path.join(importer_dir, 'iot_hw_arch.' + now_stamp + '.csv')
-	developers_path = os.path.join(importer_dir, 'developers.' + now_stamp + '.csv')
-	apps_path = os.path.join(importer_dir, 'apps.' + now_stamp + '.csv')
+	app_cate_path = os.path.join(importer_dir, 'app_cate__' + now_stamp + '.csv')
+	iot_hw_arch_path = os.path.join(importer_dir, 'iot_hw_arch__' + now_stamp + '.csv')
+	developers_path = os.path.join(importer_dir, 'developers__' + now_stamp + '.csv')
+	apps_path = os.path.join(importer_dir, 'apps__' + now_stamp + '.csv')
 
 	with open(app_cate_path, "w") as outfile:
 		outfile.write(frappe.as_json(app_cat))

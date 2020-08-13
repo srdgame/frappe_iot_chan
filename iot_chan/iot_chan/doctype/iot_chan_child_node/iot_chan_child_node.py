@@ -20,7 +20,7 @@ def export_doctyp_to_csv(doctype, filters=None):
 	org_doctype = frappe.response.doctype
 
 	export_data(doctype=doctype, all_doctypes=True, template=True, with_data=True, filters=filters)
-	data = frappe.response.result.encode("utf-8")
+	data = frappe.response.result
 
 	# Rollback response
 	frappe.response.result = org_result

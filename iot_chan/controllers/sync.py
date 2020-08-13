@@ -81,25 +81,19 @@ def import_basic_info(info):
 	now_stamp = str(int(time.time()))
 
 	app_cate_path = os.path.join(importer_dir, 'app_cate__' + now_stamp + '.csv')
-	iot_hw_arch_path = os.path.join(importer_dir, 'iot_hw_arch__' + now_stamp + '.csv')
-	developers_path = os.path.join(importer_dir, 'developers__' + now_stamp + '.csv')
-	apps_path = os.path.join(importer_dir, 'apps__' + now_stamp + '.csv')
-
-	frappe.logger(__name__).info('App Category file path: {0}'.format(app_cate_path))
-	frappe.logger(__name__).info('IOT Hardware Architecture file path: {0}'.format(iot_hw_arch_path))
-	frappe.logger(__name__).info('App Developer file path: {0}'.format(developers_path))
-	frappe.logger(__name__).info('IOT Application file path: {0}'.format(apps_path))
-
 	with open(app_cate_path, "w") as outfile:
 		# outfile.write(frappe.as_json(app_cat))
 		outfile.write(app_cat)
 
+	iot_hw_arch_path = os.path.join(importer_dir, 'iot_hw_arch__' + now_stamp + '.csv')
 	with open(iot_hw_arch_path, "w") as outfile:
 		outfile.write(iot_hw_arch)
 
+	developers_path = os.path.join(importer_dir, 'developers__' + now_stamp + '.csv')
 	with open(developers_path, "w") as outfile:
 		outfile.write(developers)
 
+	apps_path = os.path.join(importer_dir, 'apps__' + now_stamp + '.csv')
 	with open(apps_path, "w") as outfile:
 		outfile.write(apps)
 
@@ -113,15 +107,19 @@ def import_basic_info(info):
 
 	for user in users:
 		if frappe.get_value('User', user, 'name') is None:
-			frappe.logger(__name__).info('Import upper IOT Center user: {0}'.format(user))
+			frappe.logger(__name__).info('Import upper IOT Center user: {0} creating'.format(user))
 			new_user = frappe.get_doc(dict(doctype='User', email=user, first_name='Imported User', send_welcome_email=0, enabled=0)).insert()
 			new_user.save()
+		else:
+			frappe.logger(__name__).info('Import upper IOT Center user: {0} exists'.format(user))
 
 	for dev in devices:
 		if frappe.get_value('IOT Device', dev, 'name') is None:
-			frappe.logger(__name__).info('Import upper IOT Center device: {0}'.format(dev))
+			frappe.logger(__name__).info('Import upper IOT Center device: {0} creating'.format(dev))
 			new_dev = frappe.get_doc(dict(doctype='IOT Device', sn=dev, dev_name='Imported Device')).insert()
 			new_dev.save()
+		else:
+			frappe.logger(__name__).info('Import upper IOT Center device: {0} exists'.format(dev))
 
 	frappe.db.commit()
 

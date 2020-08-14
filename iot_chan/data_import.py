@@ -71,7 +71,7 @@ class ChanImporter(Importer):
 		):
 			for i, payload in enumerate(batched_payloads):
 				doc = payload.doc
-				frappe.logger(__name__).info('Import process_doc rows {0}'.format(json.dumps(payload.rows)))
+				frappe.logger(__name__).info('Import process_doc rows {0}'.format(repr(payload.rows)))
 				row_indexes = [row.row_number for row in payload.rows]
 				current_index = (i + 1) + (batch_index * batch_size)
 

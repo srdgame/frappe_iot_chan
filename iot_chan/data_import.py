@@ -12,7 +12,7 @@ from frappe.core.doctype.data_import.importer import Importer, get_id_field
 
 class ChanImporter(Importer):
 	def process_doc(self, doc):
-		frappe.logger(__name__).info('Import process_doc')
+		frappe.logger(__name__).info('Import process_doc {0}'.format(repr(doc)))
 		id_field = get_id_field(self.doctype)
 		if frappe.get_value(self.doctype, doc.get(id_field.fieldname), "name"):
 			self.update_record(doc)

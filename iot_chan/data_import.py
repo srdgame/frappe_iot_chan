@@ -91,6 +91,8 @@ class ChanImporter(Importer):
 				try:
 					start = timeit.default_timer()
 					doc = self.process_doc(doc)
+					if doc is None:
+						continue
 					processing_time = timeit.default_timer() - start
 					eta = self.get_eta(current_index, total_payload_count, processing_time)
 

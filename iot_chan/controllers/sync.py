@@ -67,20 +67,21 @@ def _sync_all():
 
 
 def update_doctype_object(doctype, doc):
-	if frappe.get_value(doctype, doc.name):
-		existing_doc = frappe.get_doc(doctype, doc.name)
+	doc_name = doc.get('name')
+	if frappe.get_value(doctype, doc_name):
+		existing_doc = frappe.get_doc(doctype, doc_name)
 
-		updated_doc = frappe.get_doc(doctype, doc.name)
+		updated_doc = frappe.get_doc(doctype, doc_name)
 		updated_doc.update(doc)
 
 		if get_diff(existing_doc, updated_doc):
-			frappe.logger(__name__).info('Updating document {0}: {1}'.format(doctype, doc.name))
+			frappe.logger(__name__).info('Updating document {0}: {1}'.format(doctype, doc_name))
 			updated_doc.update(doc)
 			updated_doc.save()
 		else:
-			frappe.logger(__name__).info('Skipped document {0}: {1}'.format(doctype, doc.name))
+			frappe.logger(__name__).info('Skipped document {0}: {1}'.format(doctype, doc_name))
 	else:
-		frappe.logger(__name__).info('Insert document {0}: {1}'.format(doctype, doc.name))
+		frappe.logger(__name__).info('Insert document {0}: {1}'.format(doctype, doc_name))
 		new_doc = frappe.new_doc(doctype)
 		new_doc.update(doc)
 		new_doc.insert()
@@ -155,7 +156,7 @@ def import_basic_info(info):
 
 		for doc in apps:
 			update_doctype_object('IOT Application', doc)
-			apps_updated.append(doc.name)
+			apps_updated.append(doc.get('name'))
 	except Exception as ex:
 		frappe.logger(__name__).exception(ex)
 		pass

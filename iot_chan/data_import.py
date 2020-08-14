@@ -158,15 +158,18 @@ def import_file(
 	:param submit_after_import: Whether to submit documents after import
 	:param console: Set to true if this is to be used from command line. Will print errors or progress to stdout.
 	"""
+	try:
+		data_import = frappe.new_doc("Data Import")
+		data_import.submit_after_import = submit_after_import
+		data_import.import_type = (
+			"Insert New Records" if import_type.lower() == "insert" else "Update Existing Records"
+		)
 
-	data_import = frappe.new_doc("Data Import")
-	data_import.submit_after_import = submit_after_import
-	data_import.import_type = (
-		"Insert New Records" if import_type.lower() == "insert" else "Update Existing Records"
-	)
-
-	i = ChanImporter(
-		doctype=doctype, file_path=file_path, data_import=data_import, console=console
-	)
-	import_log = i.import_data()
-	frappe.logger(__name__).info('Import type: {0} result: {1}'.format(data_import.import_type, import_log))
+		i = ChanImporter(
+			doctype=doctype, file_path=file_path, data_import=data_import, console=console
+		)
+		import_log = i.import_data()
+		frappe.logger(__name__).info('Import type: {0} result: {1}'.format(data_import.import_type, import_log))
+	except Exception as ex:
+		frappe.flags.in_import = False
+		raise ex

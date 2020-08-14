@@ -30,13 +30,14 @@ class ChanImporter(Importer):
 		warnings = [w for w in warnings if w.get("type") != "info"]
 
 		frappe.logger(__name__).info('Import process_doc 1111111')
-
+		'''
 		if warnings:
 			if self.console:
 				self.print_grouped_warnings(warnings)
 			else:
 				self.data_import.db_set("template_warnings", json.dumps(warnings))
 			return warnings
+		'''
 
 		frappe.logger(__name__).info('Import process_doc 22222')
 		# setup import log

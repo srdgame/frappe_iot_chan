@@ -11,6 +11,7 @@ import datetime
 import requests
 from frappe import throw, _, _dict
 from frappe.utils import get_files_path
+from frappe.core.doctype.version.version import get_diff
 from app_center.app_center.doctype.iot_application_version.iot_application_version import get_latest_version
 from iot_chan.iot_chan.doctype.iot_chan_settings.iot_chan_settings import IOTChanSettings
 from iot_chan.data_import import import_file
@@ -65,6 +66,26 @@ def _sync_all():
 		throw(repr(ex))
 
 
+def update_doctype_object(doctype, doc):
+	if frappe.get_value(doctype, doc.name):
+		existing_doc = frappe.get_doc(doctype, doc.name)
+
+		updated_doc = frappe.get_doc(doctype, doc.name)
+		updated_doc.update(doc)
+
+		if get_diff(existing_doc, updated_doc):
+			frappe.logger(__name__).info('Updating document {0}: {1}'.format(doctype, doc.name))
+			updated_doc.update(doc)
+			updated_doc.save()
+		else:
+			frappe.logger(__name__).info('Skipped document {0}: {1}'.format(doctype, doc.name))
+	else:
+		frappe.logger(__name__).info('Insert document {0}: {1}'.format(doctype, doc.name))
+		new_doc = frappe.new_doc(doctype)
+		new_doc.update(doc)
+		new_doc.insert()
+
+
 def import_basic_info(info):
 	app_cat = info['App Category']
 	iot_hw_arch = info['IOT Hardware Architecture']
@@ -82,20 +103,19 @@ def import_basic_info(info):
 
 	app_cate_path = os.path.join(importer_dir, 'app_cate__' + now_stamp + '.csv')
 	with open(app_cate_path, "w") as outfile:
-		# outfile.write(frappe.as_json(app_cat))
-		outfile.write(app_cat)
+		outfile.write(frappe.as_json(app_cat))
 
 	iot_hw_arch_path = os.path.join(importer_dir, 'iot_hw_arch__' + now_stamp + '.csv')
 	with open(iot_hw_arch_path, "w") as outfile:
-		outfile.write(iot_hw_arch)
+		outfile.write(frappe.as_json(iot_hw_arch))
 
 	developers_path = os.path.join(importer_dir, 'developers__' + now_stamp + '.csv')
 	with open(developers_path, "w") as outfile:
-		outfile.write(developers)
+		outfile.write(frappe.as_json(developers))
 
 	apps_path = os.path.join(importer_dir, 'apps__' + now_stamp + '.csv')
 	with open(apps_path, "w") as outfile:
-		outfile.write(apps)
+		outfile.write(frappe.as_json(apps))
 
 	users_path = os.path.join(importer_dir, 'users__' + now_stamp + '.csv')
 	with open(users_path, "w") as outfile:
@@ -105,6 +125,7 @@ def import_basic_info(info):
 	with open(devices_path, "w") as outfile:
 		outfile.write(frappe.as_json(devices))
 
+	apps_updated = []
 	try:
 		frappe.flags.in_import = True
 		for user in users:
@@ -122,23 +143,36 @@ def import_basic_info(info):
 				new_dev.save()
 			else:
 				frappe.logger(__name__).info('Import upper IOT Center device: {0} exists'.format(dev))
+
+		for doc in app_cat:
+			update_doctype_object('App Category', doc)
+
+		for doc in iot_hw_arch:
+			update_doctype_object('IOT Hardware Architecture', doc)
+
+		for doc in developers:
+			update_doctype_object('App Developer', doc)
+
+		for doc in apps:
+			update_doctype_object('IOT Application', doc)
+			apps_updated.append(doc.name)
 	except Exception as ex:
+		frappe.logger(__name__).exception(ex)
+		pass
+	finally:
 		frappe.flags.in_import = False
-		raise ex
 
-	frappe.flags.in_import = False
-
-	import_file('App Category', app_cate_path, import_type='Update', submit_after_import=True, console=False)
-	import_file('IOT Hardware Architecture', iot_hw_arch_path, import_type='Update', submit_after_import=True, console=False)
-	import_file('App Developer', developers_path, import_type='Update', submit_after_import=True, console=False)
-	import_file('IOT Application', apps_path, import_type='Update', submit_after_import=True, console=False)
-
-	# Trigger all application sync
-	for d in frappe.get_all("IOT Application", ["name"]):
-		frappe.logger(__name__).info('Import IOT Application: {0} creating'.format(d.name))
-		sync_app_versions(d.name)
+	# import_file('App Category', app_cate_path, import_type='Update', submit_after_import=True, console=False)
+	# import_file('IOT Hardware Architecture', iot_hw_arch_path, import_type='Update', submit_after_import=True, console=False)
+	# import_file('App Developer', developers_path, import_type='Update', submit_after_import=True, console=False)
+	# import_file('IOT Application', apps_path, import_type='Update', submit_after_import=True, console=False)
 
 	frappe.db.commit()
+
+	# Trigger all application sync
+	for app in apps_updated:
+		frappe.logger(__name__).info('Update IOT Application: {0} versions'.format(app))
+		sync_app_versions(app)
 
 	frappe.logger(__name__).info('Import upper IOT Center is done!!')
 

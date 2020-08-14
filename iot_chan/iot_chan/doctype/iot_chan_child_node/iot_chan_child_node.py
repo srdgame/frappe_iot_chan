@@ -4,7 +4,7 @@
 
 from __future__ import unicode_literals
 import frappe
-from frappe import throw, _
+from frappe import throw, _, _dict
 from frappe.model.document import Document
 from frappe.core.doctype.data_export.exporter import export_data
 
@@ -13,27 +13,66 @@ class IOTChanChildNode(Document):
 	pass
 
 
-def export_doctype_to_csv(doctype, filters=None):
-	# Keep the response
-	org_result = frappe.response.result
-	org_type = frappe.response.type
-	org_doctype = frappe.response.doctype
+def get_tags(doctype, name):
+	tags = [tag.tag for tag in frappe.get_all("Tag Link", filters={
+			"document_type": doctype,
+			"document_name": name
+		}, fields=["tag"])]
 
-	export_data(doctype=doctype, all_doctypes=True, template=False, with_data=True, filters=filters)
-	data = frappe.response.result
+	return ",".join([tag for tag in tags])
 
-	# Rollback response
-	frappe.response.result = org_result
-	frappe.response.type = org_type
-	frappe.response.doctype = org_doctype
+
+def as_dict(doc, keep_modified=True, keep_owner=False, keep_creation=True, keep_docstatus=False, include_tags=False):
+	keep_data = _dict({
+		"name": doc.name
+	})
+	if keep_modified:
+		keep_data['modified'] = doc.modified
+	if keep_owner:
+		keep_data['owner'] = doc.owner
+	if keep_creation:
+		keep_data['creation'] = doc.creation
+	if include_tags:
+		keep_data['tags'] = get_tags(doc.doctype, doc.name)
+	if keep_docstatus:
+		keep_data['docstatus'] = doc.docstatus
+
+	return doc.as_dict(no_default_fields=True).update(keep_data)
+
+
+def get_doc_as_dict(doc_type, name, keep_modified=True, keep_owner=False, keep_creation=True, keep_docstatus=False, include_tags=False):
+	doc = None
+	try:
+		doc = frappe.get_doc(doc_type, name)
+	except Exception as ex:
+		throw("object_not_found")
+
+	return as_dict(doc, keep_modified=keep_modified, keep_owner=keep_owner, keep_creation=keep_creation, keep_docstatus=keep_docstatus, include_tags=include_tags)
+
+
+def list_doctype_objects(doctype, filters=None, order_by="creation asc", include_tags=False):
+	data = []
+	for d in frappe.get_all(doctype, "name", filters=filters, order_by=order_by):
+		data.append(get_doc_as_dict(doctype, d.name, include_tags=include_tags))
 	return data
 
 
-def export_apps(node_name):
+def get_basic_info(node_name):
+	return {
+		'App Category': list_doctype_objects('App Category'),
+		'IOT Hardware Architecture': list_doctype_objects('IOT Hardware Architecture'),
+		'IOT Application': list_apps(node_name),
+		'App Developer': list_developers_info(node_name),
+		'User': list_developer_users(node_name),  # only user id
+		'IOT Device': list_devices(node_name)
+	}
+
+
+def list_apps(node_name):
 	filters = {"parent": node_name}
 	apps = [d.app for d in frappe.get_all("IOT Chan Child NodeLicensedApp", fields=["app"], filters=filters)]
 
-	return export_doctype_to_csv('IOT Application', filters={"name": ["in", apps]})
+	return list_doctype_objects('IOT Application', filters={"name": ["in", apps]})
 
 
 def list_developers(node_name):
@@ -54,9 +93,9 @@ def list_developer_users(node_name):
 	return users
 
 
-def export_developers(node_name):
+def list_developers_info(node_name):
 	developers = list_developers(node_name)
-	return export_doctype_to_csv('App Developer', filters={"name": ["in", developers]})
+	return list_doctype_objects('App Developer', filters={"name": ["in", developers]})
 
 
 def list_devices(node_name):

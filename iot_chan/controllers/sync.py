@@ -68,6 +68,7 @@ def _sync_all():
 
 def update_doctype_object(doctype, doc):
 	doc_name = doc.get('name')
+	frappe.logger(__name__).info('update_doctype_object {0}: {1}'.format(doctype, json.dumps(doc)))
 	if frappe.get_value(doctype, doc_name):
 		existing_doc = frappe.get_doc(doctype, doc_name)
 

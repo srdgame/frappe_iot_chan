@@ -16,11 +16,15 @@ class ChanImporter(Importer):
 			frappe.logger(__name__).info('Import process_doc is None')
 			return
 		frappe.logger(__name__).info('Import process_doc')
-		id_field = get_id_field(self.doctype)
-		if frappe.get_value(self.doctype, doc.get(id_field.fieldname), "name"):
-			self.update_record(doc)
-		else:
-			self.insert_record(doc)
+		try:
+			id_field = get_id_field(self.doctype)
+			if frappe.get_value(self.doctype, doc.get(id_field.fieldname), "name"):
+				self.update_record(doc)
+			else:
+				self.insert_record(doc)
+		except Exception as ex:
+			frappe.logger(__name__).exception(ex)
+			return
 
 	def import_data(self):
 		self.before_import()

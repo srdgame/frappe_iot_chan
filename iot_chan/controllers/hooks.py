@@ -15,39 +15,39 @@ def validate_iot_device(doc, method):
 		if frappe.get_value("IOT Virtual Device", doc.sn, "name"):
 			return
 
-		throw(_("Child IOT Center blocking check"))
+		frappe.throw(_("This is an Child IOT Center"), frappe.PermissionError)
 
 
 def validate_app_category(doc, method):
 	if IOTChanSettings.get_enable_upper_center() == 1:
 		if frappe.flags.in_import:
 			return
-		throw(_("Child IOT Center blocking check"))
+		frappe.throw(_("This is an Child IOT Center"), frappe.PermissionError)
 
 
 def validate_iot_hardware_architecture(doc, method):
 	if IOTChanSettings.get_enable_upper_center() == 1:
 		if frappe.flags.in_import:
 			return
-		throw(_("Child IOT Center blocking check"))
+		frappe.throw(_("This is an Child IOT Center"), frappe.PermissionError)
 
 
 def validate_app_developer(doc, method):
 	if IOTChanSettings.get_enable_upper_center() == 1:
 		if frappe.flags.in_import:
 			return
-		throw(_("Child IOT Center blocking check"))
+		frappe.throw(_("This is an Child IOT Center"), frappe.PermissionError)
 
 
 def validate_iot_application(doc, method):
 	if IOTChanSettings.get_enable_upper_center() == 1:
 		if frappe.flags.in_import:
 			return
-		throw(_("Child IOT Center blocking check"))
+		frappe.throw(_("This is an Child IOT Center"), frappe.PermissionError)
 
 
 def validate_iot_application_version(doc, method):
 	if IOTChanSettings.get_enable_upper_center() == 1:
 		if frappe.flags.in_import:
 			return
-		throw(_("Child IOT Center blocking check"))
+		frappe.throw(_("This is an Child IOT Center"), frappe.PermissionError)

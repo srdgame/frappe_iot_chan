@@ -194,51 +194,13 @@ def sync_app_versions(app):
 	frappe.enqueue('iot_chan.controllers.sync._sync_app_versions', app=app)
 
 
-def ___get_latest_version(app, beta=0):
-	if int(beta) == 1:
-		sql = "select max(version) from `tabIOT Application Version` where app='{0}'".format(app)
-		frappe.logger(__name__).info(sql)
-		frappe.logger(__name__).info(json.dumps(frappe.db.sql(sql)))
-		return int(frappe.db.sql(sql)[0][0] or 0)
-	else:
-		sql = "select max(version) from `tabIOT Application Version` where app='{0}' and beta=0".format(app)
-		frappe.logger(__name__).info(sql)
-		frappe.logger(__name__).info(json.dumps(frappe.db.sql(sql)))
-		return int(frappe.db.sql(sql)[0][0] or 0)
-
-
-def __get_latest_version(app, beta=0):
-	filters = {
-		"app": app
-	}
-	if int(beta == 0):
-		filters.update({
-			"beta": 0
-		})
-	result = frappe.get_all("IOT Application Version", fields=["max(version)"], filters=filters)
-
-	frappe.logger(__name__).info('__get_latest_version: {0}'.format(repr(result)))
-
-	versions = frappe.get_all("IOT Application Version", fields=["*"], filters=filters)
-
-	frappe.logger(__name__).info('__get_latest_version 222: {0}'.format(repr(versions)))
-
-	frappe.logger(__name__).info('__get_latest_version 3333: {0}'.format(json.dumps(frappe.db.sql('select * from `tabIOT Application Version`'))))
-
-	if not result:
-		return 0
-	else:
-		max_uid = cint(result[0].get("version", 0)) + 1
-		return max_uid
-
-
 def _sync_app_versions(app):
 	if IOTChanSettings.get_enable_upper_center() != 1:
 		frappe.logger(__name__).error("IOT Upper Center is not enabled")
 		return
 
 	try:
-		base_version = __get_latest_version(app, 0)
+		base_version = get_latest_version(app, 0)
 
 		json_data = sync_api("get_app_versions", params={"app": app, "base_version": base_version})
 

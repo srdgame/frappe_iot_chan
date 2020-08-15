@@ -217,19 +217,8 @@ def _sync_app_versions(app):
 
 def import_app_versions(versions):
 	for ver in versions:
-		ver = _dict(ver)
-		frappe.logger(__name__).info('Import upper IOT Center import_app_versions: {0}'.format(json.dumps(ver)))
-		if ver.version <= 0:
-			continue
-		data = dict(
-			doctype='IOT Application Version',
-			app=ver.app,
-			version=ver.version,
-			beta=ver.beta,
-			comment=ver.comment
-		)
-		ver_doc = frappe.get_doc(data).insert(ignore_permissions=True)
-		sync_app_version_file(ver_doc.app, ver_doc.version, ver_doc.beta)
+		update_doctype_object('IOT Application Version', ver)
+		sync_app_version_file(ver.get('app'), ver.get('version'), ver.get('beta'))
 
 	frappe.db.commit()
 

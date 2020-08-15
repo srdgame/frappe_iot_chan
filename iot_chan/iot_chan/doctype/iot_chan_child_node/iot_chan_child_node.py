@@ -112,39 +112,33 @@ def list_app_versions(node_name, app, beta=0, base_version=0):
 		"version": [">", base_version]
 	}
 
-	fields = ['app', 'version', 'beta', 'comment']
+	fields = ['name', 'app', 'version', 'beta', 'comment']
 	order_by = "version desc"
 	versions = frappe.get_all("IOT Application Version", filters=filters, fields=fields, order_by=order_by)
 	if len(versions) == 0:
 		return []
 
+	beta_data = versions[0]
 	beta_comment = 'Comments:'
-	beta_version = versions[0].version
+
+	data = None
 	comment = 'Comments:'
-	version = 0
 	got_release = False
 	for ver in versions:
 		beta_comment = beta_comment + '\n' + ver.comment
-		if version == 0 and ver.beta == 0:
-			version = ver.version
+		if data is None and ver.beta == 0:
+			data = ver
 			got_release = True
 		if got_release:
 			comment = comment + '\n' + ver.comment
 
-	data = []
-	if beta == 1:
-		data.append({
-			"app": app,
-			"version": beta_version,
-			"beta": 1,
-			"comment": beta_comment
-		})
-	if version != 0:
-		data.append({
-			"app": app,
-			"version": version,
-			"beta": 0,
-			"comment": comment
-		})
+	result = []
+	if data:
+		data.update({"comment": comment})
+		result.append(data)
 
-	return data
+	if beta == 1 and beta_data.beta == 1:
+		beta_data.update({"comment": beta_comment})
+		result.append(beta_data)
+
+	return result

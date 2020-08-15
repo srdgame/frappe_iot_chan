@@ -219,6 +219,17 @@ def __get_latest_version(app, beta=0):
 
 	frappe.logger(__name__).info('__get_latest_version: {0}'.format(repr(result)))
 
+
+	filters = {
+		"app": app
+	}
+
+	fields = ['app', 'version', 'beta', 'comment']
+	order_by = "version desc"
+	versions = frappe.get_all("IOT Application Version", filters=filters, fields=fields, order_by=order_by)
+
+	frappe.logger(__name__).info('__get_latest_version 222: {0}'.format(repr(versions)))
+
 	if not result:
 		return 0
 	else:

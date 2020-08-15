@@ -232,7 +232,7 @@ def _sync_app_version_file(app, version, beta):
 
 	iot_center = IOTChanSettings.get_upper_center()
 	ext = frappe.get_value("IOT Application", app, "app_ext")
-	url = iot_center + "/files/app_center_files/" + app + "/" + str(version) + ext
+	url = iot_center + "/files/app_center_files/" + app + "/" + str(version) + "." + ext
 	file_path = get_app_release_filepath(app, version)
 
 	'''

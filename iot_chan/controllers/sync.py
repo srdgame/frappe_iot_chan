@@ -206,6 +206,7 @@ def _sync_app_versions(app):
 
 
 def import_app_versions(versions):
+	frappe.logger(__name__).info('Import upper IOT Center import_app_versions: {0}'.format(json.dumps(versions)))
 	for ver in versions:
 		data = dict(
 			doctype='IOT Application Version',

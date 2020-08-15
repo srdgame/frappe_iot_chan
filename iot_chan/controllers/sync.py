@@ -10,7 +10,7 @@ import time
 # import pycurl
 import requests
 from frappe import throw, _, _dict
-from frappe.utils import get_files_path
+from frappe.utils import get_files_path, cint
 from frappe.core.doctype.version.version import get_diff
 from app_center.app_center.doctype.iot_application_version.iot_application_version import get_latest_version
 from app_center.appmgr import get_app_release_filepath, copy_to_latest
@@ -194,7 +194,7 @@ def sync_app_versions(app):
 	frappe.enqueue('iot_chan.controllers.sync._sync_app_versions', app=app)
 
 
-def __get_latest_version(app, beta=0):
+def ___get_latest_version(app, beta=0):
 	if int(beta) == 1:
 		sql = "select max(version) from `tabIOT Application Version` where app='{0}'".format(app)
 		frappe.logger(__name__).info(sql)
@@ -206,6 +206,24 @@ def __get_latest_version(app, beta=0):
 		frappe.logger(__name__).info(json.dumps(frappe.db.sql(sql)))
 		return int(frappe.db.sql(sql)[0][0] or 0)
 
+
+def __get_latest_version(app, beta=0):
+	filters = {
+		"app": app
+	}
+	if int(beta == 0):
+		filters.update({
+			"beta": 0
+		})
+	result = frappe.db.get_all("IOT Application Version", filters=filters, fields=["max(version) as version"])
+
+	frappe.logger(__name__).info('__get_latest_version: {0}'.format(repr(result)))
+
+	if not result:
+		return 0
+	else:
+		max_uid = cint(result[0].get("version", 0)) + 1
+		return max_uid
 
 
 def _sync_app_versions(app):

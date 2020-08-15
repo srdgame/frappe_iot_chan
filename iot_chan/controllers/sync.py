@@ -157,7 +157,7 @@ def import_basic_info(info):
 
 		for doc in apps:
 			if doc.get('company'):
-				doc = doc.pop('company') # Clear the Company
+				doc.pop('company') # Clear the Company
 			update_doctype_object('IOT Application', doc)
 			apps_updated.append(doc.get('name'))
 	except Exception as ex:

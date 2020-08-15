@@ -84,6 +84,7 @@ def update_doctype_object(doctype, doc):
 	else:
 		frappe.logger(__name__).info('Insert document {0}: {1}'.format(doctype, doc_name))
 		new_doc = frappe.new_doc(doctype)
+		new_doc.flags.in_import = True
 		new_doc.update(doc)
 		new_doc.insert()
 
@@ -215,6 +216,7 @@ def _sync_app_versions(app):
 
 def import_app_versions(versions):
 	for ver in versions:
+		frappe.logger(__name__).info('Import upper IOT Center import_app_versions: {0}'.format(json.dumps(ver)))
 		if ver.version <= 0:
 			continue
 		data = dict(
@@ -224,7 +226,6 @@ def import_app_versions(versions):
 			beta=ver.beta,
 			comment=ver.comment
 		)
-		frappe.logger(__name__).info('Import upper IOT Center import_app_versions: {0}'.format(json.dumps(data)))
 		frappe.get_doc(data).insert(ignore_permissions=True)
 		sync_app_version_file(data.app, data.version, data.beta)
 

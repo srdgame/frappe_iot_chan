@@ -69,7 +69,7 @@ def _sync_all():
 def update_doctype_object(doctype, doc):
 	doc_name = doc.get('name')
 	frappe.logger(__name__).info('update_doctype_object {0}: {1}'.format(doctype, json.dumps(doc)))
-	if frappe.get_value(doctype, doc_name):
+	if frappe.get_value(doctype, doc_name, 'name'):
 		existing_doc = frappe.get_doc(doctype, doc_name)
 
 		updated_doc = frappe.get_doc(doctype, doc_name)
@@ -81,11 +81,13 @@ def update_doctype_object(doctype, doc):
 			updated_doc.save()
 		else:
 			frappe.logger(__name__).info('Skipped document {0}: {1}'.format(doctype, doc_name))
+		return
 	else:
 		frappe.logger(__name__).info('Insert document {0}: {1}'.format(doctype, doc_name))
 		new_doc = frappe.new_doc(doctype)
 		new_doc.update(doc)
 		new_doc.insert()
+		return
 
 
 def import_basic_info(info):
@@ -157,7 +159,11 @@ def import_basic_info(info):
 
 		for doc in apps:
 			if doc.get('company'):
-				doc.pop('company') # Clear the Company
+				doc.pop('company')  # Clear the Company
+			if doc.get('app_path'):
+				doc.pop('app_path')
+			if doc.get('app_name_unique'):
+				doc.pop('app_name_unique')
 			update_doctype_object('IOT Application', doc)
 			apps_updated.append(doc.get('name'))
 	except Exception as ex:

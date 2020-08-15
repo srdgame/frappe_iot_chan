@@ -113,7 +113,7 @@ def list_app_versions(node_name, app, beta=0, base_version=0):
 	}
 
 	fields = ['app', 'version', 'beta', 'comment']
-	order_by = "modified desc"
+	order_by = "version desc"
 	versions = frappe.get_all("IOT Application Version", filters=filters, fields=fields, order_by=order_by)
 	if len(versions) == 0:
 		return []

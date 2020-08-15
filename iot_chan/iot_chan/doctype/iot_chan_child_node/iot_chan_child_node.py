@@ -103,7 +103,7 @@ def list_devices(node_name):
 
 
 def list_app_versions(node_name, app, beta=0, base_version=0):
-	app_id = frappe.get_value("IOT Chan Child NodeLicensedApp", {"parent": node_name}, "app")
+	app_id = frappe.get_value("IOT Chan Child NodeLicensedApp", {"parent": node_name, "app": app}, "app")
 	if app_id != app:
 		raise frappe.PermissionError
 

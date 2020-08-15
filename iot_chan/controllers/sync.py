@@ -216,6 +216,7 @@ def _sync_app_versions(app):
 
 def import_app_versions(versions):
 	for ver in versions:
+		ver = _dict(ver)
 		frappe.logger(__name__).info('Import upper IOT Center import_app_versions: {0}'.format(json.dumps(ver)))
 		if ver.version <= 0:
 			continue

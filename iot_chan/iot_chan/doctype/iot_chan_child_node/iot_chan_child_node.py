@@ -124,7 +124,7 @@ def list_app_versions(node_name, app, beta=0, base_version=0):
 	version = 0
 	got_release = False
 	for ver in versions:
-		beta_comment = '\n' + ver.comment
+		beta_comment = beta_comment + '\n' + ver.comment
 		if version == 0 and ver.beta == 0:
 			version = ver.version
 			got_release = True

@@ -7,7 +7,7 @@ import frappe
 import json
 import os
 import time
-import pycurl
+# import pycurl
 import requests
 from frappe import throw, _, _dict
 from frappe.utils import get_files_path
@@ -243,6 +243,7 @@ def _sync_app_version_file(app, version, beta):
 	url = iot_center + "/files/app_center_files/" + app + "/" + str(version) + ext
 	file_path = get_app_release_filepath(app, version)
 
+	'''
 	c_bin = pycurl.Curl()
 	c_bin.setopt(c_bin.URL, url)
 
@@ -259,5 +260,8 @@ def _sync_app_version_file(app, version, beta):
 
 	# with open(file_path + '.md5', 'wb') as f:
 	# 	md5_sum = f.read(32)
+	'''
+	os.system("curl -o " + file_path + " " + url)
+	os.system("curl -o " + file_path + ".md5 " + url + ".md5")
 
 	copy_to_latest(app, version, beta)

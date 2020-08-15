@@ -7,14 +7,14 @@ import frappe
 import json
 import os
 import time
-import datetime
+import pycurl
 import requests
 from frappe import throw, _, _dict
 from frappe.utils import get_files_path
 from frappe.core.doctype.version.version import get_diff
 from app_center.app_center.doctype.iot_application_version.iot_application_version import get_latest_version
+from app_center.appmgr import get_app_release_filepath, copy_to_latest
 from iot_chan.iot_chan.doctype.iot_chan_settings.iot_chan_settings import IOTChanSettings
-from iot_chan.data_import import import_file
 
 
 def get_iot_chan_file_path(app):
@@ -81,13 +81,13 @@ def update_doctype_object(doctype, doc):
 			updated_doc.save()
 		else:
 			frappe.logger(__name__).info('Skipped document {0}: {1}'.format(doctype, doc_name))
-		return
 	else:
 		frappe.logger(__name__).info('Insert document {0}: {1}'.format(doctype, doc_name))
 		new_doc = frappe.new_doc(doctype)
 		new_doc.update(doc)
 		new_doc.insert()
-		return
+
+	return
 
 
 def import_basic_info(info):
@@ -166,6 +166,8 @@ def import_basic_info(info):
 				doc.pop('app_name_unique')
 			update_doctype_object('IOT Application', doc)
 			apps_updated.append(doc.get('name'))
+
+		frappe.db.commit()
 	except Exception as ex:
 		frappe.logger(__name__).exception(ex)
 		pass
@@ -176,8 +178,6 @@ def import_basic_info(info):
 	# import_file('IOT Hardware Architecture', iot_hw_arch_path, import_type='Update', submit_after_import=True, console=False)
 	# import_file('App Developer', developers_path, import_type='Update', submit_after_import=True, console=False)
 	# import_file('IOT Application', apps_path, import_type='Update', submit_after_import=True, console=False)
-
-	frappe.db.commit()
 
 	# Trigger all application sync
 	for app in apps_updated:
@@ -204,16 +204,19 @@ def _sync_app_versions(app):
 		json_data = sync_api("get_app_versions", params={"app": app, "base_version": base_version})
 		frappe.flags.in_import = True
 		import_app_versions(json_data)
-		frappe.flags.in_import = False
 	except Exception as ex:
-		frappe.flags.in_import = False
 		frappe.logger(__name__).error(ex)
-		throw(repr(ex))
+		pass
+	finally:
+		frappe.flags.in_import = False
+
+	return
 
 
 def import_app_versions(versions):
-	frappe.logger(__name__).info('Import upper IOT Center import_app_versions: {0}'.format(json.dumps(versions)))
 	for ver in versions:
+		if ver.version <= 0:
+			continue
 		data = dict(
 			doctype='IOT Application Version',
 			app=ver.app,
@@ -221,7 +224,40 @@ def import_app_versions(versions):
 			beta=ver.beta,
 			comment=ver.comment
 		)
-		new_version = frappe.get_doc(data).insert()
-		new_version.save()
+		frappe.logger(__name__).info('Import upper IOT Center import_app_versions: {0}'.format(json.dumps(data)))
+		frappe.get_doc(data).insert(ignore_permissions=True)
+		sync_app_version_file(data.app, data.version, data.beta)
 
 	frappe.db.commit()
+
+
+def sync_app_version_file(app, version, beta):
+	frappe.enqueue('iot_chan.controllers.sync._sync_app_version_file', app=app, version=version, beta=beta)
+
+
+def _sync_app_version_file(app, version, beta):
+	frappe.logger(__name__).info('Import upper IOT Center sync_app_version_file: {0} - {1}'.format(app, version))
+
+	iot_center = IOTChanSettings.get_upper_center()
+	ext = frappe.get_value("IOT Application", app, "app_ext")
+	url = iot_center + "/files/app_center_files/" + app + "/" + str(version) + ext
+	file_path = get_app_release_filepath(app, version)
+
+	c_bin = pycurl.Curl()
+	c_bin.setopt(c_bin.URL, url)
+
+	with open(file_path, 'wb') as f:
+		c_bin.setopt(c_bin.WRITEDATA, f)
+		c_bin.perform()
+
+	c_md5 = pycurl.Curl()
+	c_md5.setopt(c_md5.URL, url + '.md5')
+
+	with open(file_path + '.md5', 'wb') as f:
+		c_md5.setopt(c_md5.WRITEDATA, f)
+		c_md5.perform()
+
+	# with open(file_path + '.md5', 'wb') as f:
+	# 	md5_sum = f.read(32)
+
+	copy_to_latest(app, version, beta)

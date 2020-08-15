@@ -215,20 +215,15 @@ def __get_latest_version(app, beta=0):
 		filters.update({
 			"beta": 0
 		})
-	result = frappe.db.get_all("IOT Application Version", filters=filters, fields=["max(version) as version"])
+	result = frappe.get_all("IOT Application Version", fields=["max(version)"], filters=filters)
 
 	frappe.logger(__name__).info('__get_latest_version: {0}'.format(repr(result)))
 
-
-	filters = {
-		"app": app
-	}
-
-	fields = ['app', 'version', 'beta', 'comment']
-	order_by = "version desc"
-	versions = frappe.get_all("IOT Application Version", filters=filters, fields=fields, order_by=order_by)
+	versions = frappe.get_all("IOT Application Version", fields=["*"], filters=filters)
 
 	frappe.logger(__name__).info('__get_latest_version 222: {0}'.format(repr(versions)))
+
+	frappe.logger(__name__).info('__get_latest_version 3333: {0}'.format(json.dumps(frappe.db.sql('select * from `tabIOT Application Version`'))))
 
 	if not result:
 		return 0

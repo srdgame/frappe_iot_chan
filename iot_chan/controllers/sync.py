@@ -226,8 +226,8 @@ def import_app_versions(versions):
 			beta=ver.beta,
 			comment=ver.comment
 		)
-		frappe.get_doc(data).insert(ignore_permissions=True)
-		sync_app_version_file(data.app, data.version, data.beta)
+		ver_doc = frappe.get_doc(data).insert(ignore_permissions=True)
+		sync_app_version_file(ver_doc.app, ver_doc.version, ver_doc.beta)
 
 	frappe.db.commit()
 

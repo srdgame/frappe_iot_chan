@@ -10,7 +10,9 @@
   "upper_center",
   "auth_code",
   "enable_auto_sync",
-  "last_sync_time"
+  "last_sync_time",
+  "common_licensed_apps_section",
+  "common_licensed_apps"
  ],
  "fields": [
   {
@@ -51,10 +53,21 @@
    "fieldname": "enable_auto_sync",
    "fieldtype": "Check",
    "label": "Enable Auto Sync"
+  },
+  {
+   "fieldname": "common_licensed_apps_section",
+   "fieldtype": "Section Break",
+   "label": "Common Licensed Apps"
+  },
+  {
+   "fieldname": "common_licensed_apps",
+   "fieldtype": "Table",
+   "label": "Common Licensed Apps",
+   "options": "IOT Chan LicensedApp"
   }
  ],
  "issingle": 1,
- "modified": "2020-08-12 16:22:54.593403",
+ "modified": "2020-08-16 15:12:11.164127",
  "modified_by": "Administrator",
  "module": "IOT Chan",
  "name": "IOT Chan Settings",

@@ -47,10 +47,10 @@
    "fieldname": "licensed_applications",
    "fieldtype": "Table",
    "label": "Licensed Applications",
-   "options": "IOT Chan Child NodeLicensedApp"
+   "options": "IOT Chan LicensedApp"
   }
  ],
- "modified": "2020-08-12 15:42:06.747219",
+ "modified": "2020-08-16 15:07:25.765389",
  "modified_by": "Administrator",
  "module": "IOT Chan",
  "name": "IOT Chan Child Node",

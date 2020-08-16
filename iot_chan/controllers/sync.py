@@ -92,6 +92,7 @@ def update_doctype_object(doctype, doc):
 
 
 def import_basic_info(info):
+	lapps = info['IOT Chan LicensedApp']
 	app_cat = info['App Category']
 	iot_hw_arch = info['IOT Hardware Architecture']
 	developers = info['App Developer']
@@ -133,6 +134,12 @@ def import_basic_info(info):
 	apps_updated = []
 	try:
 		frappe.flags.in_import = True
+		for app in lapps:
+			filters = {"parent": 'IOT Chan Settings', "app": app.app}
+			if not frappe.get_value('IOT Chan LicensedApp', fields='name', filters=filters):
+				new_user = frappe.get_doc(dict(doctype='IOT Chan LicensedApp', app=app.app)).insert()
+				new_user.save()
+
 		for user in users:
 			if frappe.get_value('User', user, 'name') is None:
 				frappe.logger(__name__).info('Import upper IOT Center user: {0} creating'.format(user))

@@ -4,6 +4,7 @@
 
 from __future__ import unicode_literals
 import frappe
+from itertools import groupby
 from frappe import throw, _
 from frappe.model.document import Document
 
@@ -15,6 +16,12 @@ class IOTChanSettings(Document):
 				throw(_("Upper IOT Center is missing!"))
 			if self.auth_code is None:
 				throw(_("Upper IOT Center Auth Code is missing!"))
+		apps = {}
+		for app in self.common_licensed_apps:
+			if apps.get(app.app):
+				throw(_("Duplicated App {0}").format(app.app))
+			else:
+				apps[app.app] = app
 
 	def sync_all(self):
 		self.save()

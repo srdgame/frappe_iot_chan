@@ -10,7 +10,14 @@ from frappe.core.doctype.data_export.exporter import export_data
 
 
 class IOTChanChildNode(Document):
-	pass
+	def validate(self):
+		apps = {}
+		for app in self.licensed_applications:
+			if apps.get(app.app):
+				throw(_("Duplicated App {0}").format(app.app))
+			else:
+				apps[app.app] = app
+				app.app_name = frappe.get_value("IOT Application", app.app, "app_name")
 
 
 def get_tags(doctype, name):

@@ -183,7 +183,8 @@ def import_basic_info(info):
 			}
 			if not frappe.get_value('IOT Chan LicensedApp', filters=data):
 				data.update({
-					"doctype": 'IOT Chan LicensedApp'
+					"doctype": 'IOT Chan LicensedApp',
+					"app_name": app.get("app_name")
 				})
 				frappe.get_doc(data).insert()
 

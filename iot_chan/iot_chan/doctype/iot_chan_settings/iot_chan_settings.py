@@ -34,8 +34,6 @@ class IOTChanSettings(Document):
 		from iot_chan.controllers.sync import sync_all as _sync_all
 		_sync_all()
 
-		self.update_last_sync_time()
-
 	@staticmethod
 	def get_enable_upper_center():
 		return frappe.db.get_single_value("IOT Chan Settings", "enable_upper_center")

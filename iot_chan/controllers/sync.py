@@ -192,6 +192,7 @@ def import_basic_info(info):
 				})
 				frappe.get_doc(data).insert()
 
+		IOTChanSettings.update_last_sync_time()
 		frappe.db.commit()
 	except Exception as ex:
 		frappe.logger(__name__).exception(ex)

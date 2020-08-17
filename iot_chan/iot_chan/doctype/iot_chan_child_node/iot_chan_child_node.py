@@ -72,19 +72,21 @@ def get_basic_info(node_name):
 		'IOT Device': list_devices(node_name)
 	}
 
+
 def _list_apps(node_name):
 	filters = {"parent": node_name}
-	apps = [d.app for d in frappe.get_all("IOT Chan Child NodeLicensedApp", fields=["app"], filters=filters)]
+	apps = [d.app for d in frappe.get_all("IOT Chan LicensedApp", fields=["app"], filters=filters)]
 
 	settings = frappe.get_doc("IOT Chan Settings")
 	for app in settings.common_licensed_apps:
 		apps.append(app.app)
 
+	frappe.logger(__name__).info(repr(apps))
 	return apps
 
 
 def list_apps(node_name):
-	apps = _list_apps
+	apps = _list_apps(node_name)
 
 	return list_doctype_objects('IOT Application', filters={"name": ["in", apps]})
 
@@ -117,9 +119,9 @@ def list_devices(node_name):
 
 
 def list_app_versions(node_name, app, beta=0, base_version=0):
-	app_id = frappe.get_value("IOT Chan Child NodeLicensedApp", {"parent": node_name, "app": app}, "app")
+	app_id = frappe.get_value("IOT Chan LicensedApp", {"parent": node_name, "app": app}, "app")
 	if app_id is None:
-		app_id = frappe.get_value("IOT Chan Child NodeLicensedApp", {"parent": 'IOT Chan Settings', "app": app}, "app")
+		app_id = frappe.get_value("IOT Chan LicensedApp", {"parent": 'IOT Chan Settings', "app": app}, "app")
 
 	if app_id != app:
 		raise frappe.PermissionError

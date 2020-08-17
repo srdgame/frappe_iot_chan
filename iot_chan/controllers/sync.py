@@ -80,7 +80,7 @@ def update_doctype_object(doctype, doc):
 			frappe.logger(__name__).info('Updating document {0}: {1}'.format(doctype, doc_name))
 			if time_diff_in_seconds(existing_doc.modified, updated_doc.modified) > 0:
 				frappe.logger(__name__).info('Updating document {0}: {1}\'s modified'.format(doctype, doc_name))
-				updated_doc.update_modified()
+				updated_doc.modified = existing_doc.modified
 			updated_doc.save()
 		else:
 			frappe.logger(__name__).info('Skipped document {0}: {1}'.format(doctype, doc_name))
@@ -167,13 +167,11 @@ def import_basic_info(info):
 		for doc in developers:
 			update_doctype_object('App Developer', doc)
 
+		app_clear_fields = ['company', 'app_path', 'app_name_unique', 'device_supplier', 'protocol']
 		for doc in apps:
-			if doc.get('company'):
-				doc.pop('company')  # Clear the Company
-			if doc.get('app_path'):
-				doc.pop('app_path')
-			if doc.get('app_name_unique'):
-				doc.pop('app_name_unique')
+			for f in app_clear_fields:
+				if doc.get(f):
+					doc.pop(f)
 			update_doctype_object('IOT Application', doc)
 			apps_updated.append(doc.get('name'))
 

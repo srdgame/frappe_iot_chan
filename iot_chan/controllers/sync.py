@@ -138,11 +138,6 @@ def import_basic_info(info):
 	apps_updated = []
 	try:
 		frappe.flags.in_import = True
-		for app in lapps:
-			filters = {"parent": 'IOT Chan Settings', "app": app.get('app')}
-			if not frappe.get_value('IOT Chan LicensedApp', filters=filters):
-				new_user = frappe.get_doc(dict(doctype='IOT Chan LicensedApp', app=app.get('app'))).insert()
-				new_user.save()
 
 		for user in users:
 			if frappe.get_value('User', user, 'name') is None:
@@ -178,6 +173,12 @@ def import_basic_info(info):
 				doc.pop('app_name_unique')
 			update_doctype_object('IOT Application', doc)
 			apps_updated.append(doc.get('name'))
+
+		for app in lapps:
+			filters = {"parent": 'IOT Chan Settings', "app": app.get('app')}
+			if not frappe.get_value('IOT Chan LicensedApp', filters=filters):
+				new_user = frappe.get_doc(dict(doctype='IOT Chan LicensedApp', app=app.get('app'))).insert()
+				new_user.save()
 
 		frappe.db.commit()
 	except Exception as ex:

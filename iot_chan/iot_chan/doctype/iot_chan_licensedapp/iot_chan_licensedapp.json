@@ -1,0 +1,30 @@
+{
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "name": "IOT Chan LicensedApp",
+ "sort_field": "modified",
+ "permissions": [],
+ "fields": [
+  {
+   "fieldname": "app",
+   "in_list_view": 1,
+   "fieldtype": "Link",
+   "label": "App",
+   "options": "IOT Application",
+   "reqd": 1
+  }
+ ],
+ "istable": 1,
+ "modified_by": "Administrator",
+ "owner": "Administrator",
+ "field_order": [
+  "app"
+ ],
+ "editable_grid": 1,
+ "sort_order": "DESC",
+ "modified": "2020-08-10 19:32:35.967002",
+ "quick_entry": 1,
+ "module": "IOT Chan",
+ "track_changes": 1,
+ "creation": "2020-08-10 19:31:06.234762"
+}

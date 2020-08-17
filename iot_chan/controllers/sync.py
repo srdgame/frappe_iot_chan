@@ -182,6 +182,9 @@ def import_basic_info(info):
 				"parenttype": "IOT Chan Settings"
 			}
 			if not frappe.get_value('IOT Chan LicensedApp', filters=data):
+				data.update({
+					"doctype": 'IOT Chan LicensedApp'
+				})
 				frappe.get_doc(data).insert()
 
 		frappe.db.commit()

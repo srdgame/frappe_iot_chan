@@ -77,12 +77,18 @@ def update_doctype_object(doctype, doc):
 		updated_doc.update(doc)
 
 		if get_diff(existing_doc, updated_doc):
+			# update doc if there are changes
+			updated_doc.flags.updater_reference = {
+				"doctype": 'IOT Chan Settings',
+				"docname": 'IOT Chan Settings',
+				"label": _("via Upper IOT Chan Center Sync"),
+			}
 			frappe.logger(__name__).info('Updating document {0}: {1}'.format(doctype, doc_name))
-			frappe.logger(__name__).info('Updating document timestamp {0}: {1}'.format(existing_doc.modified, updated_doc.modified))
-			frappe.logger(__name__).info('Updating document time_diff {0}'.format(time_diff_in_seconds(existing_doc.modified, updated_doc.modified)))
-			if time_diff_in_seconds(existing_doc.modified, updated_doc.modified) > 0:
-				frappe.logger(__name__).info('Updating document {0}: {1}\'s modified'.format(doctype, doc_name))
-				updated_doc.modified = existing_doc.modified
+			# frappe.logger(__name__).info('Updating document timestamp {0}: {1}'.format(existing_doc.modified, updated_doc.modified))
+			# frappe.logger(__name__).info('Updating document time_diff {0}'.format(time_diff_in_seconds(existing_doc.modified, updated_doc.modified)))
+			# if time_diff_in_seconds(existing_doc.modified, updated_doc.modified) > 0:
+			# 	frappe.logger(__name__).info('Updating document {0}: {1}\'s modified'.format(doctype, doc_name))
+			# 	updated_doc.modified = existing_doc.modified
 			updated_doc.save()
 		else:
 			frappe.logger(__name__).info('Skipped document {0}: {1}'.format(doctype, doc_name))

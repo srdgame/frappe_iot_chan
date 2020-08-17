@@ -60,7 +60,7 @@ def get_doc_as_dict(doc_type, name, keep_modified=True, keep_owner=False, keep_c
 def list_doctype_objects(doctype, filters=None, order_by="creation asc", include_tags=False):
 	data = []
 	for d in frappe.get_all(doctype, "name", filters=filters, order_by=order_by):
-		data.append(get_doc_as_dict(doctype, d.name, include_tags=include_tags))
+		data.append(get_doc_as_dict(doctype, d.name, include_tags=include_tags, keep_modified=False))
 	return data
 
 

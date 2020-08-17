@@ -10,8 +10,9 @@ import time
 # import pycurl
 import requests
 from frappe import throw, _, _dict
-from frappe.utils import get_files_path, cint
+from frappe.utils import get_files_path
 from frappe.core.doctype.version.version import get_diff
+from frappe.utils import time_diff_in_seconds
 from app_center.app_center.doctype.iot_application_version.iot_application_version import get_latest_version
 from app_center.appmgr import get_app_release_filepath, copy_to_latest
 from iot_chan.iot_chan.doctype.iot_chan_settings.iot_chan_settings import IOTChanSettings
@@ -77,7 +78,9 @@ def update_doctype_object(doctype, doc):
 
 		if get_diff(existing_doc, updated_doc):
 			frappe.logger(__name__).info('Updating document {0}: {1}'.format(doctype, doc_name))
-			updated_doc.update(doc)
+			if time_diff_in_seconds(existing_doc.modified, updated_doc.modified) > 0:
+				frappe.logger(__name__).info('Updating document {0}: {1}\'s modified'.format(doctype, doc_name))
+				updated_doc.update_modified()
 			updated_doc.save()
 		else:
 			frappe.logger(__name__).info('Skipped document {0}: {1}'.format(doctype, doc_name))

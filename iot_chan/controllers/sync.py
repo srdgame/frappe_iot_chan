@@ -142,16 +142,16 @@ def import_basic_info(info):
 		for user in users:
 			if frappe.get_value('User', user, 'name') is None:
 				frappe.logger(__name__).info('Import upper IOT Center user: {0} creating'.format(user))
-				new_user = frappe.get_doc(dict(doctype='User', email=user, first_name='Imported User', send_welcome_email=0, enabled=0)).insert()
-				new_user.save()
+				user_data = dict(doctype='User', email=user, first_name='Imported User', send_welcome_email=0, enabled=0)
+				frappe.get_doc(user_data).insert()
 			else:
 				frappe.logger(__name__).info('Import upper IOT Center user: {0} exists'.format(user))
 
 		for dev in devices:
 			if frappe.get_value('IOT Device', dev, 'name') is None:
 				frappe.logger(__name__).info('Import upper IOT Center device: {0} creating'.format(dev))
-				new_dev = frappe.get_doc(dict(doctype='IOT Device', sn=dev, dev_name='Imported Device', enabled=1)).insert()
-				new_dev.save()
+				dev_data = dict(doctype='IOT Device', sn=dev, dev_name='Imported Device', enabled=1)
+				frappe.get_doc(dev_data).insert()
 			else:
 				frappe.logger(__name__).info('Import upper IOT Center device: {0} exists'.format(dev))
 
@@ -175,10 +175,14 @@ def import_basic_info(info):
 			apps_updated.append(doc.get('name'))
 
 		for app in lapps:
-			filters = {"parent": 'IOT Chan Settings', "app": app.get('app')}
-			if not frappe.get_value('IOT Chan LicensedApp', filters=filters):
-				new_user = frappe.get_doc(dict(doctype='IOT Chan LicensedApp', app=app.get('app'))).insert()
-				new_user.save()
+			data = {
+				"parent": "IOT Chan Settings",
+				"app": app.get("app"),
+				"parentfield": "common_licensed_apps",
+				"parenttype": "IOT Chan Settings"
+			}
+			if not frappe.get_value('IOT Chan LicensedApp', filters=data):
+				frappe.get_doc(data).insert()
 
 		frappe.db.commit()
 	except Exception as ex:

@@ -107,6 +107,10 @@ def import_basic_info(info):
 
 	now_stamp = str(int(time.time()))
 
+	lapss_path = os.path.join(importer_dir, 'licensed_apps__' + now_stamp + '.csv')
+	with open(lapss_path, "w") as outfile:
+		outfile.write(frappe.as_json(lapps))
+
 	app_cate_path = os.path.join(importer_dir, 'app_cate__' + now_stamp + '.csv')
 	with open(app_cate_path, "w") as outfile:
 		outfile.write(frappe.as_json(app_cat))
@@ -135,9 +139,9 @@ def import_basic_info(info):
 	try:
 		frappe.flags.in_import = True
 		for app in lapps:
-			filters = {"parent": 'IOT Chan Settings', "app": app.app}
+			filters = {"parent": 'IOT Chan Settings', "app": app.get('app')}
 			if not frappe.get_value('IOT Chan LicensedApp', fields='name', filters=filters):
-				new_user = frappe.get_doc(dict(doctype='IOT Chan LicensedApp', app=app.app)).insert()
+				new_user = frappe.get_doc(dict(doctype='IOT Chan LicensedApp', app=app.get('app'))).insert()
 				new_user.save()
 
 		for user in users:

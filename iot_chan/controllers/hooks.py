@@ -12,7 +12,8 @@ def validate_iot_device(doc, method):
 	if IOTChanSettings.get_enable_upper_center() == 1:
 		if frappe.flags.in_import:
 			return
-		if frappe.get_value("IOT Virtual Device", doc.sn, "name"):
+
+		if not doc.is_new():
 			return
 
 		frappe.throw(_("This is an Child IOT Center"), frappe.PermissionError)
